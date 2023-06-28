@@ -6,7 +6,7 @@ from PIL import Image
 #IMPORTANT: Do not keep serial monitor open on Arduino Web Editor while trying to run this script
 port = 'COM5' # change based on what is seen in Arduino Web Editor
 baudrate = 115600 # do not change baudrate
-
+label="test"
 # Initialize serial port
 ser = serial.Serial()
 ser.port     = port
@@ -49,7 +49,20 @@ while True:
         data_str = serial_readline()
         if str(data_str) == "</image>":
             print("Captured frame")
+            crop_area = (0, 0, height, height)
             image_pil = Image.fromarray(image)
-            image_pil.show()
+            image_cropped = image_pil.crop(crop_area)
+            image_cropped.show()
+            key = input("Save image? [y] for YES: ")
+            if key == 'y':
+                str_label = f"Write label or leave it blank to use [{label}]: "
+                label_new = input(str_label)
+                if label_new != '':
+                    label = label_new
+                unique_id = str(uuid.uuid4())
+                filename = label + "_"+ unique_id + ".png"
+                image_cropped.save(filename)
+                print(f"Image saved as {filename}\n")
         else:
-            print("Error capture image")
+            print("Error capturing image\n")
+        
