@@ -35,7 +35,7 @@ inline void ycbcr422_rgb888(int32_t Y, int32_t Cb, int32_t Cr, uint8_t* out) {
 }
 
 void setup() {
-  Serial.begin(115200); //baud rate
+  Serial.begin(115600); //baud rate
   
   while (!Serial);
   initializeShield();
