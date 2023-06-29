@@ -1,6 +1,6 @@
 # tinyml-optimization
 PS1 Project
-IMPORTANT: MAKE PR, DO NOT COMMIT DIRECTLY TO MAIN
+IMPORTANT: MAKE PR, DO NOT COMMIT DIRECTLY TO MAIN FOR CHANGES
 
 ##Instructions
 1. Install miniconda: https://docs.conda.io/en/latest/miniconda.html
