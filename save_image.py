@@ -5,7 +5,7 @@ import uuid
 from PIL import Image
 #IMPORTANT: Do not keep serial monitor open on Arduino Web Editor while trying to run this script
 port = 'COM5' # change based on what is seen in Arduino Web Editor
-baudrate = 115600 # do not change baudrate
+baudrate = 115200 # do not change baudrate
 label="test"
 # Initialize serial port
 ser = serial.Serial()
