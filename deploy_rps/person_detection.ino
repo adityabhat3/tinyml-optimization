@@ -25,7 +25,7 @@ limitations under the License.
 #include "tensorflow/lite/micro/micro_interpreter.h"
 #include "tensorflow/lite/micro/micro_mutable_op_resolver.h"
 #include "tensorflow/lite/schema/schema_generated.h"
-// #include "tensorflow/lite/version.h"
+#include "tensorflow/lite/version.h"
 
 // Globals, used for compatibility with Arduino-style sketches.
 namespace {
@@ -42,7 +42,7 @@ TfLiteTensor* input = nullptr;
 // signed value.
 
 // An area of memory to use for input, output, and intermediate arrays.
-constexpr int kTensorArenaSize = 136 * 1024;
+constexpr int kTensorArenaSize = 144000;
 static uint8_t tensor_arena[kTensorArenaSize];
 }  // namespace
 
@@ -56,14 +56,14 @@ void setup() {
 
   // Map the model into a usable data structure. This doesn't involve any
   // copying or parsing, it's a very lightweight operation.
-  model = tflite::GetModel(g_person_detect_model_data);
-  // if (model->version() != TFLITE_SCHEMA_VERSION) {
-  //   TF_LITE_REPORT_ERROR(error_reporter,
-  //                        "Model provided is schema version %d not equal "
-  //                        "to supported version %d.",
-  //                        model->version(), TFLITE_SCHEMA_VERSION);
-  //   return;
-  // }
+  model = tflite::GetModel(g_rps_model_data);
+  if (model->version() != TFLITE_SCHEMA_VERSION) {
+    TF_LITE_REPORT_ERROR(error_reporter,
+                         "Model provided is schema version %d not equal "
+                         "to supported version %d.",
+                         model->version(), TFLITE_SCHEMA_VERSION);
+    return;
+  }
 
   // Pull in only the operation implementations we need.
   // This relies on a complete list of all the ops needed by this graph.
@@ -73,11 +73,18 @@ void setup() {
   //
   // tflite::AllOpsResolver resolver;
   // NOLINTNEXTLINE(runtime-global-variables)
-  static tflite::MicroMutableOpResolver<5> micro_op_resolver;
-  micro_op_resolver.AddAveragePool2D();
+  
+  ///THIS NEEDS TO BE CHANGED
+  static tflite::MicroMutableOpResolver<8> micro_op_resolver;
+  // micro_op_resolver.AddAveragePool2D();
+  micro_op_resolver.AddMean();
+  micro_op_resolver.AddAdd();
+  micro_op_resolver.AddDequantize();
   micro_op_resolver.AddConv2D();
   micro_op_resolver.AddDepthwiseConv2D();
-  micro_op_resolver.AddReshape();
+  // micro_op_resolver.AddReshape();
+  micro_op_resolver.AddFullyConnected();
+  micro_op_resolver.AddPad();
   micro_op_resolver.AddSoftmax();
 
   // Build an interpreter to run the model with.
@@ -113,7 +120,9 @@ void loop() {
   TfLiteTensor* output = interpreter->output(0);
 
   // Process the inference results.
-  int8_t person_score = output->data.uint8[kPersonIndex];
-  int8_t no_person_score = output->data.uint8[kNotAPersonIndex];
-  RespondToDetection(error_reporter, person_score, no_person_score);
+  int8_t rock_score = output->data.uint8[kRockIndex];
+  int8_t paper_score = output->data.uint8[kPaperIndex];
+  int8_t scissors_score = output->data.uint8[kScissorsIndex];
+
+  RespondToDetection(error_reporter, rock_score, paper_score, scissors_score);
 }
