@@ -25,7 +25,7 @@ limitations under the License.
 
 // Flash the blue LED after each inference
 void RespondToDetection(tflite::ErrorReporter* error_reporter,
-                        int8_t rock_score, int8_t paper_score ,int8_t scissors_score) {
+                        float rock_score, float paper_score , float scissors_score) {
   static bool is_initialized = false;
   if (!is_initialized) {
     // Pins for the built-in RGB LEDs on the Arduino Nano 33 BLE Sense
@@ -68,9 +68,14 @@ void RespondToDetection(tflite::ErrorReporter* error_reporter,
       digitalWrite(LEDB, LOW);
     }
   }
+  int rock_percentage = (int)100*rock_score;
+  int paper_percentage = (int)100*paper_score;
+  int scissors_percentage = (int)100*scissors_score;
 
-  TF_LITE_REPORT_ERROR(error_reporter, "Rock score: %d Paper score: %d Scissors score: %d",
-                       rock_score, paper_score, scissors_score);
+
+
+  TF_LITE_REPORT_ERROR(error_reporter, "Rock percentage: %d Paper percentage: %d Scissors percentage: %d",
+                       rock_percentage, paper_percentage, scissors_percentage);
 }
 
 #endif  // ARDUINO_EXCLUDE_CODE
