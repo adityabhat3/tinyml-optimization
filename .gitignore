@@ -32,3 +32,4 @@
 *.app
 
 *.Identifier
+.DS_Store
