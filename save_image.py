@@ -1,12 +1,16 @@
 import numpy as np
 import serial
 import sys
+import tensorflow as tf
 import uuid
 from PIL import Image
 #IMPORTANT: Do not keep serial monitor open on Arduino Web Editor while trying to run this script
-port = 'COM5' # change based on what is seen in Arduino Web Editor
+port = '/dev/cu.usbmodem14101' # change based on what is seen in Arduino Web Editor
 baudrate = 115200 # do not change baudrate
 label="test"
+
+model=tf.keras.models.load_model("temp")
+# model.eval()
 # Initialize serial port
 ser = serial.Serial()
 ser.port     = port
@@ -24,6 +28,7 @@ def serial_readline():
     data = ser.readline() # read a '\n' terminated line
     return data.decode("utf-8").strip()
 
+print("Ready")
 while True:
     data_str = serial_readline()
 
@@ -46,13 +51,17 @@ while True:
                 for c in range(0, num_ch):
                     data_str = serial_readline()
                     image[y][x][c] = int(data_str)
+        # print(image.shape)
         data_str = serial_readline()
         if str(data_str) == "</image>":
             print("Captured frame")
             crop_area = (0, 0, height, height)
             image_pil = Image.fromarray(image)
+            # print(image_pil.shape())
             image_cropped = image_pil.crop(crop_area)
             image_cropped.show()
+            # img=image_cropped.resize((48,48))
+            # print(model.predict(np.asarray(img)))
             key = input("Save image? [y] for YES: ")
             if key == 'y':
                 str_label = f"Write label or leave it blank to use [{label}]: "
@@ -63,6 +72,18 @@ while True:
                 filename = label + "_"+ unique_id + ".png"
                 image_cropped.save(filename)
                 print(f"Image saved as {filename}\n")
+
+                # from PIL import Image
+
+                new_image = Image.open(f"{filename}")
+                new_width = 48
+                new_height = 48
+                resized_image = np.array(new_image.resize((new_width, new_height)), dtype=int).reshape((-1,48,48,3))
+                print(model.predict(resized_image))
+
+                
         else:
             print("Error capturing image\n")
+
+
         
