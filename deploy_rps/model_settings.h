@@ -28,8 +28,8 @@ constexpr int kNumChannels = 3;
 constexpr int kMaxImageSize = kNumCols * kNumRows * kNumChannels;
 
 constexpr int kCategoryCount = 3;
-constexpr int kRockIndex = 0;
-constexpr int kPaperIndex = 1;
+constexpr int kRockIndex = 1;
+constexpr int kPaperIndex = 0;
 constexpr int kScissorsIndex =2;
 extern const char* kCategoryLabels[kCategoryCount];
 
