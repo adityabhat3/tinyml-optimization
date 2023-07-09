@@ -9,7 +9,7 @@ port = '/dev/cu.usbmodem14101' # change based on what is seen in Arduino Web Edi
 baudrate = 115200 # do not change baudrate
 label="test"
 
-model=tf.keras.models.load_model("temp")
+model=tf.keras.models.load_model("temp5")
 # model.eval()
 # Initialize serial port
 ser = serial.Serial()
@@ -78,12 +78,15 @@ while True:
                 new_image = Image.open(f"{filename}")
                 new_width = 48
                 new_height = 48
-                resized_image = np.array(new_image.resize((new_width, new_height)), dtype=int).reshape((-1,48,48,3))
+                # .resize((new_width, new_height)), dtype=int
+                resized_image = np.array(new_image).reshape((-1,60,60,3))
+                resized_image = resized_image / 255.0  # Assuming your inference data is in the range [0, 255]
+                resized_image = (resized_image - 0.5) * 2.0
                 print(model.predict(resized_image))
 
-                
+   
         else:
             print("Error capturing image\n")
 
 
-        
+   
