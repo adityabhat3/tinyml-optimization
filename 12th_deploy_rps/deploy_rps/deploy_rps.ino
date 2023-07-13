@@ -136,22 +136,25 @@ void setup() {
 // The name of this function is important for Arduino compatibility.
 void loop() {
   // Get image from provider.
-  if (kTfLiteOk != GetImage(error_reporter, kNumCols, kNumRows, kNumChannels,
-                            input->data.int8, tflu_scale, tflu_zeropoint)) {
-    TF_LITE_REPORT_ERROR(error_reporter, "Image capture failed.");
+  bool button_pressed = readShieldButton();
+  if(button_pressed){
+    if (kTfLiteOk != GetImage(error_reporter, kNumCols, kNumRows, kNumChannels,
+                              input->data.int8, tflu_scale, tflu_zeropoint)) {
+      TF_LITE_REPORT_ERROR(error_reporter, "Image capture failed.");
+    }
+
+    // Run the model on this input and make sure it succeeds.
+    if (kTfLiteOk != interpreter->Invoke()) {
+      TF_LITE_REPORT_ERROR(error_reporter, "Invoke failed.");
+    }
+
+    TfLiteTensor* output = interpreter->output(0);
+
+    // Process the inference results.
+    float rock_score = output->data.f[kRockIndex];
+    float paper_score = output->data.f[kPaperIndex];
+    float scissors_score = output->data.f[kScissorsIndex];
+
+    RespondToDetection(error_reporter, rock_score, paper_score, scissors_score);
   }
-
-  // Run the model on this input and make sure it succeeds.
-  if (kTfLiteOk != interpreter->Invoke()) {
-    TF_LITE_REPORT_ERROR(error_reporter, "Invoke failed.");
-  }
-
-  TfLiteTensor* output = interpreter->output(0);
-
-  // Process the inference results.
-  float rock_score = output->data.f[kRockIndex];
-  float paper_score = output->data.f[kPaperIndex];
-  float scissors_score = output->data.f[kScissorsIndex];
-
-  RespondToDetection(error_reporter, rock_score, paper_score, scissors_score);
 }

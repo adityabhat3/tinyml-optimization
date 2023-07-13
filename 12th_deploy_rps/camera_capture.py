@@ -8,6 +8,7 @@ from PIL import Image
 port = '/dev/cu.usbmodem14201' # change based on what is seen in Arduino Web Editor
 baudrate = 115200 # do not change baudrate
 label="test"
+TFLITE_FILE_PATH=""
 
 model=tf.keras.models.load_model("model60x60v6")
 # model.eval()
@@ -27,6 +28,9 @@ image = np.empty((height, width, num_ch), dtype=np.uint8)
 def serial_readline():
     data = ser.readline() # read a '\n' terminated line
     return data.decode("utf-8").strip()
+
+interpreter = tf.lite.Interpreter(TFLITE_FILE_PATH)
+
 
 print("Ready")
 while True:
@@ -76,16 +80,19 @@ while True:
                 # from PIL import Image
 
                 new_image = Image.open(f"{filename}")
-                new_width = 60
-                new_height = 60
+                new_width = 64
+                new_height = 64
             
                 resized_image = np.array(new_image.resize((new_width, new_height)), dtype=int).reshape((-1,60,60,3))
-                resized_image = resized_image / 255.0  # Assuming your inference data is in the range [0, 255]
-                resized_image = (resized_image - 0.5) * 2.0
+                resized_image = resized_image / 127.5 -1 # Assuming your inference data is in the range [0, 255]
+                # resized_image = (resized_image - 0.5) * 2.0
                 print("Paper Rock Scissors: ")
                 print(model.predict(resized_image))
 
    
+        elif str(data_str).startswith("Rock"):
+            print(str(data_str)) # Arduino inference
+
         else:
             print("Error capturing image\n")
 
