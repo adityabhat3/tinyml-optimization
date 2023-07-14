@@ -57,7 +57,7 @@ inline uint8_t bilinear_inter(uint8_t v00, uint8_t v01, uint8_t v10, uint8_t v11
 }
 
 inline float rescale(float x, float scale, float offset) {
-  return (x * scale) - offset;
+  return (x * scale) + offset;
 }
 
 inline int8_t quantize(float x, float scale, float zero_point) {
@@ -84,7 +84,7 @@ TfLiteStatus GetImage(tflite::ErrorReporter* error_reporter, int image_width,
 
   // Read camera data
   Camera.readFrame(data);
-  // uint8_t rgb888[3];
+  uint8_t rgb888[3];
   
   bytes_per_pixel = Camera.bytesPerPixel();
   bytes_per_frame = Camera.width() * Camera.height() * bytes_per_pixel;
@@ -165,11 +165,11 @@ TfLiteStatus GetImage(tflite::ErrorReporter* error_reporter, int image_width,
       int8_t c_q;
       for(int i = 0; i < 3; i++) {
         c_i = bilinear_inter(rgb00[i], rgb01[i], rgb10[i], rgb11[i], xi_f, yi_f, xi, yi);
-        c_f = rescale((float)c_i, 1.f/127.5f, -1.f);
+        c_f = rescale((float)c_i, 1.0f/127.5f, -1.0f);
         c_q = quantize(c_f, tflu_scale, tflu_zeropoint);
         image_data[idx++] = c_q;
         if(debug_application){
-          Serial.println(c_i);
+          Serial.println(c_q);
         }
       }
     }

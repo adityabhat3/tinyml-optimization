@@ -25,7 +25,7 @@ limitations under the License.
 
 // Flash the blue LED after each inference
 void RespondToDetection(tflite::ErrorReporter* error_reporter,
-                        float rock_score, float paper_score , float scissors_score) {
+                        int8_t rock_score, int8_t paper_score , int8_t scissors_score) {
   static bool is_initialized = false;
   if (!is_initialized) {
     // Pins for the built-in RGB LEDs on the Arduino Nano 33 BLE Sense
@@ -34,7 +34,7 @@ void RespondToDetection(tflite::ErrorReporter* error_reporter,
     pinMode(LEDB, OUTPUT); //scissor
     is_initialized = true;
   }
-  float rock_factor=1.0;
+  // float rock_factor=1.0;
 
   // Note: The RGB LEDs on the Arduino Nano 33 BLE
   // Sense are on when the pin is LOW, off when HIGH.
@@ -43,40 +43,30 @@ void RespondToDetection(tflite::ErrorReporter* error_reporter,
   digitalWrite(LEDR, HIGH);
   digitalWrite(LEDG, HIGH);
   digitalWrite(LEDB, HIGH);
-  delay(100);
+  delay(10000);
 
-  if (rock_factor*rock_score > paper_score) {
-    if(rock_factor*rock_score > scissors_score){
+  if (rock_score > paper_score) {
+    if(rock_score > scissors_score){
       digitalWrite(LEDR, LOW);
-      // digitalWrite(LEDG, HIGH);
-      // digitalWrite(LEDB, HIGH);
     }
     else{
-      // digitalWrite(LEDR, HIGH);
-      // digitalWrite(LEDG, HIGH);
       digitalWrite(LEDB, LOW);
     }
   } 
   else {
     if(paper_score > scissors_score){
-      // digitalWrite(LEDR, HIGH);
       digitalWrite(LEDG, LOW);
-      // digitalWrite(LEDB, HIGH);
     }
     else{
-      // digitalWrite(LEDR, HIGH);
-      // digitalWrite(LEDG, HIGH);
       digitalWrite(LEDB, LOW);
     }
   }
-  int rock_percentage = (int)100*rock_score;
-  int paper_percentage = (int)100*paper_score;
-  int scissors_percentage = (int)100*scissors_score;
-
-
+  int rock_percentage = (int)rock_score;
+  int paper_percentage = (int)paper_score;
+  int scissors_percentage = (int)scissors_score;
 
   TF_LITE_REPORT_ERROR(error_reporter, "Rock percentage: %d Paper percentage: %d Scissors percentage: %d",
-                       rock_percentage, paper_percentage, scissors_percentage);
+                      rock_percentage, paper_percentage, scissors_percentage);
 }
 
 #endif  // ARDUINO_EXCLUDE_CODE

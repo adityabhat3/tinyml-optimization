@@ -29,6 +29,6 @@ limitations under the License.
 // image is considered to contain a person.  This threshold may be adjusted for
 // particular applications.
 void RespondToDetection(tflite::ErrorReporter* error_reporter,
-                        float rock_score, float paper_score, float scissors_score);
+                        int8_t rock_score, int8_t paper_score, int8_t scissors_score);
 
 #endif  // TENSORFLOW_LITE_MICRO_EXAMPLES_PERSON_DETECTION_DETECTION_RESPONDER_H_

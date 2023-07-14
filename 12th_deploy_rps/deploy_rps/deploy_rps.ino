@@ -14,6 +14,8 @@ limitations under the License.
 ==============================================================================*/
 
 #include <TensorFlowLite.h>
+// #include <TinyMLShield.h>
+#include <tensorflow/lite/micro/all_ops_resolver.h>
 
 #include "main_functions.h"
 
@@ -90,37 +92,44 @@ void setup() {
   // incur some penalty in code space for op implementations that are not
   // needed by this graph.
   //
-  // tflite::AllOpsResolver resolver;
+  tflite::AllOpsResolver resolver;
   // NOLINTNEXTLINE(runtime-global-variables)
   
-  static tflite::MicroMutableOpResolver<10> micro_op_resolver;
-  // micro_op_resolver.AddAveragePool2D();
-  micro_op_resolver.AddMean();
-  micro_op_resolver.AddAdd();
-  micro_op_resolver.AddDequantize();
-  micro_op_resolver.AddConv2D();
-  micro_op_resolver.AddDepthwiseConv2D();
-  micro_op_resolver.AddRelu();
-  micro_op_resolver.AddRelu6();
-  micro_op_resolver.AddFullyConnected();
-  micro_op_resolver.AddPad();
-  micro_op_resolver.AddSoftmax();
+  // static tflite::MicroMutableOpResolver<11> micro_op_resolver;
+  // // micro_op_resolver.AddAveragePool2D();
+  //  micro_op_resolver.AddMean();
+  // // micro_op_resolver.AddAdd();
+  //  micro_op_resolver.AddDequantize();
+  //  micro_op_resolver.AddConv2D();
+  //  micro_op_resolver.AddDepthwiseConv2D();
+  //  micro_op_resolver.AddRelu();
+  //  micro_op_resolver.AddRelu6();
+  //  micro_op_resolver.AddFullyConnected();
+  //  micro_op_resolver.AddPad();
+  //  micro_op_resolver.AddSoftmax();
 
+  // static tflite::MicroMutableOpResolver<5> micro_op_resolver;
+  // micro_op_resolver.AddAveragePool2D();
+  // micro_op_resolver.AddConv2D();
+  // micro_op_resolver.AddDepthwiseConv2D();
+  // micro_op_resolver.AddReshape();
+  // micro_op_resolver.AddSoftmax();
 
 
   // Build an interpreter to run the model with.
   // NOLINTNEXTLINE(runtime-global-variables)
-  static tflite::MicroInterpreter static_interpreter(
-      model, micro_op_resolver, tensor_arena, kTensorArenaSize, error_reporter);
-  interpreter = &static_interpreter;
+  interpreter = new tflite::MicroInterpreter(
+      model, resolver, tensor_arena, kTensorArenaSize, error_reporter);
+  // interpreter = &static_interpreter;
 
   input = interpreter->input(0);
 
   const auto* i_quantization = reinterpret_cast<TfLiteAffineQuantization*>(input->quantization.params);
 
   // Get the quantization parameters (per-tensor quantization)
-  float tflu_scale     = i_quantization->scale->data[0];
-  int32_t tflu_zeropoint = i_quantization->zero_point->data[0];
+  tflu_scale     = i_quantization->scale->data[0];
+  tflu_zeropoint = i_quantization->zero_point->data[0];
+  
 
   TF_LITE_REPORT_ERROR(error_reporter, "TFLu initialization - completed");
 
@@ -136,7 +145,7 @@ void setup() {
 // The name of this function is important for Arduino compatibility.
 void loop() {
   // Get image from provider.
-  bool button_pressed = readShieldButton();
+  bool button_pressed = true;
   if(button_pressed){
     if (kTfLiteOk != GetImage(error_reporter, kNumCols, kNumRows, kNumChannels,
                               input->data.int8, tflu_scale, tflu_zeropoint)) {
@@ -150,10 +159,15 @@ void loop() {
 
     TfLiteTensor* output = interpreter->output(0);
 
+// TF_LITE_REPORT_ERROR(error_reporter, "%d\n", input->data.int8);
     // Process the inference results.
-    float rock_score = output->data.f[kRockIndex];
-    float paper_score = output->data.f[kPaperIndex];
-    float scissors_score = output->data.f[kScissorsIndex];
+    int8_t rock_score = output->data.uint8[kRockIndex];
+    int8_t paper_score = output->data.uint8[kPaperIndex];
+    int8_t scissors_score = output->data.uint8[kScissorsIndex];
+
+    
+
+
 
     RespondToDetection(error_reporter, rock_score, paper_score, scissors_score);
   }
