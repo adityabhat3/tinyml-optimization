@@ -28,7 +28,7 @@ class PolynomialDecay(LearningRateDecay):
 
 To use these learning rate schedulers, you can import the module into your project and instantiate the desired scheduler class. You can then use the scheduler as a callback in the training process to adjust the learning rate over epochs.
 
-Example usage:
+## Example usage
 
 from learning_rate_schedulers import StepDecay
 
