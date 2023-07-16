@@ -18,6 +18,9 @@ IMPORTANT: MAKE PR, DO NOT COMMIT DIRECTLY TO MAIN FOR CHANGES
 8. Ensure serial monitor is not open on Arduino Web Editor while trying to run the display_image.py script
 9. Run python script
 
+
+
+# Deployment of Rock, Paper & Scissors hand gesture detection
     
 This documentation provides an overview and detailed information about the different aspects of the project. It serves as a guide for understanding the project structure, dataset, model files, and other relevant information. Below is the table of contents that includes links to each section for easy navigation:
 
