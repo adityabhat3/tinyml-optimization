@@ -16,14 +16,13 @@
 
 #include "Arduino.h"
 #include <TinyMLShield.h>
+
 namespace{
-// static const char *label[] = {"rock", "paper", "scissors"};
 static int bytes_per_frame;
 static int bytes_per_pixel;
 static bool debug_application = true;
-// static float   tflu_scale     = 0.0f;
-// static int32_t tflu_zeropoint = 0;
-
+static float   tflu_scale     = 0.0f;
+static int32_t tflu_zeropoint = 0;
 static int w0 = 0;
 static int h0 = 0;
 static int stride_in_y = 0;
@@ -71,7 +70,6 @@ TfLiteStatus GetImage(tflite::ErrorReporter* error_reporter, int image_width,
   static uint8_t data[160 * 120 * 2]; // QQVGA: 160x120 X 2 bytes per pixel (YUV422)
 
   static bool g_is_camera_initialized = false;
-  // static bool serial_is_initialized = false;
 
   // Initialize camera if necessary
   if (!g_is_camera_initialized) {
@@ -181,4 +179,4 @@ TfLiteStatus GetImage(tflite::ErrorReporter* error_reporter, int image_width,
   return kTfLiteOk;
 }
 
-#endif  // ARDUINO_EXCLUDE_CODE
+#endif //ARDUINO_EXCLUDE_CODE

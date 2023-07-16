@@ -34,7 +34,6 @@ void RespondToDetection(tflite::ErrorReporter* error_reporter,
     pinMode(LEDB, OUTPUT); //scissor
     is_initialized = true;
   }
-  // float rock_factor=1.0;
 
   // Note: The RGB LEDs on the Arduino Nano 33 BLE
   // Sense are on when the pin is LOW, off when HIGH.
@@ -61,6 +60,7 @@ void RespondToDetection(tflite::ErrorReporter* error_reporter,
       digitalWrite(LEDB, LOW);
     }
   }
+
   int rock_percentage = (int)rock_score;
   int paper_percentage = (int)paper_score;
   int scissors_percentage = (int)scissors_score;
