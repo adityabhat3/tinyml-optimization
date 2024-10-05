@@ -1,5 +1,4 @@
 # tinyml-optimization
-PS1 Project
 
 ## Instructions
 1. Install miniconda: https://docs.conda.io/en/latest/miniconda.html
@@ -12,8 +11,6 @@ PS1 Project
 8. Ensure serial monitor is not open on Arduino Web Editor while trying to run the display_image.py script
 9. Run python script
 
-
-
 # Deployment of Rock, Paper & Scissors hand gesture detection
     
 This documentation provides an overview and detailed information about the different aspects of the project. It serves as a guide for understanding the project structure, dataset, model files, and other relevant information. Below is the table of contents that includes links to each section for easy navigation:
@@ -24,10 +21,6 @@ This documentation provides an overview and detailed information about the diffe
 - [Model Files](#link4)
 - [Prepare Model Notebook](#link5)
 - [Learning Rate Schedulers](#link6)
-
-Now let's explore each section in more detail:
-
-
 
 # <a name="link1"></a>Arduino Deployment
 
@@ -110,7 +103,7 @@ The `loop` function is the main program loop. It captures an image from the came
 
 - If you encounter any other issues, refer to the error messages in the serial monitor for troubleshooting guidance.
 
-[Go to Arduino Deployment](https://github.com/adityabhat3/tinyml-optimization/tree/main/FINAL/arduino_deployment)
+[Go to Arduino Deployment](https://github.com/adityabhat3/tinyml-optimization/tree/main/arduino_deployment)
 
 
 
@@ -118,7 +111,7 @@ The `loop` function is the main program loop. It captures an image from the came
 
 The Final Dataset contains subfolders of Rock, Paper and Scissors images used for training the model. The dataset was collecting using the `camera_capture.py` script and setting up the arduino to capture and send raw images via the serial port.
 
-[Go to Final Dataset](https://github.com/adityabhat3/tinyml-optimization/tree/main/FINAL/final_dataset)
+[Go to Final Dataset](https://github.com/adityabhat3/tinyml-optimization/tree/main/final_dataset)
 
 
 # <a name="link3"></a>Camera Capture
@@ -161,7 +154,7 @@ Before running this script, ensure that you have the following:
 - Adjust the `port` variable in the script to match the correct serial port on your system.
 - If needed, modify the `label` and `TFLITE_FILE_PATH` variables in the script according to your requirements.
 
-[Go to Camera Capture](https://github.com/adityabhat3/tinyml-optimization/blob/main/FINAL/camera_capture.py)
+[Go to Camera Capture](https://github.com/adityabhat3/tinyml-optimization/blob/main/camera_capture.py)
 
 
 
@@ -169,11 +162,11 @@ Before running this script, ensure that you have the following:
 
 The "model.tflite" file is a TensorFlow Lite model file that contains the trained model for rock-paper-scissors image classification. It is a compact and optimized representation of the model that can be deployed on various platforms.
 
-[Go to TFLite File](https://github.com/adityabhat3/tinyml-optimization/blob/main/FINAL/model.tflite)
+[Go to TFLite File](https://github.com/adityabhat3/tinyml-optimization/blob/main/model.tflite)
 
 The "model64v1.cpp" file is a C++ source code file that is used for deploying the TensorFlow Lite model on an Arduino-compatible board. This file must be copied into `rps_model_dat.cpp` before running the `arduino_deployment.ino` file.
 
-[Go to C source File](https://github.com/adityabhat3/tinyml-optimization/blob/main/FINAL/model64v1.cpp)
+[Go to C source File](https://github.com/adityabhat3/tinyml-optimization/blob/main/model64v1.cpp)
 
 
 
@@ -235,7 +228,7 @@ The `prepare_model.ipynb` notebook performs the following steps:
 3. Follow the step-by-step instructions provided in the notebook to train the model, evaluate its performance, and convert it to the TFLite format.
 4. Use the generated `model.tflite` file for deployment on resource-constrained platforms.
 
-[Go to Preparing Model Notebook](https://github.com/adityabhat3/tinyml-optimization/blob/main/FINAL/prepare_model.ipynb)
+[Go to Preparing Model Notebook](https://github.com/adityabhat3/tinyml-optimization/blob/main/prepare_model.ipynb)
 
 
 
@@ -263,5 +256,5 @@ history = model.fit(
   callbacks=[lr_callback]
 )
 
-[Go to Learning Rate Schedulers](https://github.com/adityabhat3/tinyml-optimization/blob/main/FINAL/learning_rate_schedulers.py)
+[Go to Learning Rate Schedulers](https://github.com/adityabhat3/tinyml-optimization/blob/main/learning_rate_schedulers.py)
 
